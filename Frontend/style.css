@@ -1,32 +1,26 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #f4f4f4;
-}
-
-header {
-    background-color: green;
-    color: white;
     text-align: center;
-    padding: 15px;
+    margin: 20px;
 }
 
-nav {
-    background-color: #333;
-    padding: 10px;
-    text-align: center;
+h1, h2 {
+    color: #2c3e50;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 15px;
-}
-
-main {
+form {
+    background: white;
     padding: 20px;
-    text-align: center;
+    width: 400px;
+    margin: auto;
+    border-radius: 10px;
+}
+
+input, select, textarea {
+    width: 90%;
+    padding: 8px;
+    margin: 5px;
 }
 
 button {
@@ -34,11 +28,18 @@ button {
     color: white;
     padding: 10px 20px;
     border: none;
+    border-radius: 5px;
 }
 
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
+button:hover {
+    background-color: darkgreen;
+}
+
+table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+th, td {
     padding: 10px;
 }
