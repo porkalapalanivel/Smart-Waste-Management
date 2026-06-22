@@ -1,5 +1,14 @@
-body {
+* E-Waste Management Website */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
     font-family: Arial, sans-serif;
+<<<<<<< HEAD
     background-color: #f4f4f4;
     text-align: center;
     margin: 20px;
@@ -33,6 +42,106 @@ button {
 
 button:hover {
     background-color: darkgreen;
+=======
+    background:#f4f4f4;
+    color:#333;
+    line-height:1.6;
+}
+
+/* Header */
+header{
+    background:#2e8b57;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+header h1{
+    margin-bottom:10px;
+}
+
+/* Navigation */
+nav{
+    background:#1f5f3f;
+    text-align:center;
+    padding:12px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:0 15px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:yellow;
+}
+
+/* Hero Section */
+.hero{
+    text-align:center;
+    padding:60px 20px;
+    background:white;
+}
+
+.hero h2{
+    color:#2e8b57;
+    margin-bottom:15px;
+}
+
+/* Sections */
+section{
+    padding:40px 20px;
+    text-align:center;
+}
+
+section h2{
+    color:#2e8b57;
+    margin-bottom:15px;
+}
+
+/* Service Cards */
+.card{
+    background:white;
+    width:300px;
+    margin:15px auto;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+.btn{
+    display:inline-block;
+    background:#2e8b57;
+    color:white;
+    padding:10px 20px;
+    text-decoration:none;
+    border-radius:5px;
+}
+
+.btn:hover{
+    background:#246b45;
+}
+
+/* Contact */
+.contact{
+    background:white;
+    max-width:600px;
+    margin:auto;
+    padding:20px;
+    border-radius:10px;
+}
+
+/* Footer */
+footer{
+    background:#1f5f3f;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:20px;
+>>>>>>> f84d11fd4fceeb8542281b63e11421f61120a932
 }
 
 table {
