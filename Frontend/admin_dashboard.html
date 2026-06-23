@@ -2,22 +2,190 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        nav {
+            background: #1f5f3f;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: yellow;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2e8b57;
+            font-size: 30px;
+        }
+
+        button {
+            background: #2e8b57;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #246b45;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Admin Dashboard</h1>
+    <nav>
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="complaint.html">Complaints</a>
+        <a href="reports.html">Reports</a>
+        <a href="index.html">Logout</a>
+    </nav>
 
-<ul>
-    <li>Total Complaints: 25</li>
-    <li>Pending Complaints: 7</li>
-    <li>Resolved Complaints: 18</li>
-</ul>
+    <h1>👨‍💼Admin Dashboard </h1>
 
-<h3>Actions</h3>
+    <div class="container">
 
-<button>View Complaints</button>
-<button>Update Status</button>
-<button>Generate Reports</button>
+        <div class="card">
+            <h2 id="total">0</h2>
+            <p>Total Complaints</p>
+        </div>
+
+        <div class="card">
+            <h2 id="pending">0</h2>
+            <p>Pending Complaints</p>
+        </div>
+
+        <div class="card">
+            <h2 id="resolved">0</h2>
+            <p>Resolved Complaints</p>
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <h3>Actions</h3>
+
+        <button onclick="window.location.href='complaint.html'">
+            View Complaints
+        </button>
+
+        <button onclick="window.location.href='reports.html'">
+            Generate Reports
+        </button>
+
+    </div>
+
+    <div class="container">
+        <h3>Recent Complaints</h3>
+        <div id="complaintList"></div>
+    </div>
+
+<script>
+
+function loadStats() {
+
+    let complaints =
+    JSON.parse(localStorage.getItem("complaints")) || [];
+
+    document.getElementById("total").innerText =
+    complaints.length;
+
+    document.getElementById("pending").innerText =
+    complaints.filter(c => c.status === "Pending").length;
+
+    document.getElementById("resolved").innerText =
+    complaints.filter(c => c.status === "Resolved").length;
+}
+
+function loadComplaints() {
+
+    let complaints =
+    JSON.parse(localStorage.getItem("complaints")) || [];
+
+    let output = "";
+
+    complaints.forEach((c, index) => {
+
+        output += `
+        <div class="card">
+            <p><b>Name:</b> ${c.name}</p>
+            <p><b>Location:</b> ${c.location}</p>
+            <p><b>Message:</b> ${c.message}</p>
+            <p><b>Status:</b> ${c.status}</p>
+
+            <button onclick="markResolved(${index})">
+                Mark Resolved
+            </button>
+        </div>
+        `;
+    });
+
+    document.getElementById("complaintList").innerHTML = output;
+}
+
+function markResolved(index) {
+
+    let complaints =
+    JSON.parse(localStorage.getItem("complaints")) || [];
+
+    complaints[index].status = "Resolved";
+
+    localStorage.setItem(
+        "complaints",
+        JSON.stringify(complaints)
+    );
+
+    loadStats();
+    loadComplaints();
+}
+
+loadStats();
+loadComplaints();
+
+</script>
 
 </body>
 </html>
+
+
+
+       

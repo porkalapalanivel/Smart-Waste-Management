@@ -1,154 +1,97 @@
-* E-Waste Management Website */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
+body {
     font-family: Arial, sans-serif;
-<<<<<<< HEAD
-    background-color: #f4f4f4;
+    background: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
     text-align: center;
-    margin: 20px;
 }
 
-h1, h2 {
-    color: #2c3e50;
-}
-
-form {
-    background: white;
+/* Header */
+header {
+    background: #2e8b57;
+    color: white;
     padding: 20px;
-    width: 400px;
-    margin: auto;
-    border-radius: 10px;
 }
 
+/* Navigation */
+nav {
+    background: #1f5f3f;
+    padding: 12px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: yellow;
+}
+
+/* Container */
+.container {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* Forms */
 input, select, textarea {
     width: 90%;
-    padding: 8px;
-    margin: 5px;
+    padding: 10px;
+    margin: 8px 0;
 }
 
-button {
-    background-color: green;
+/* Buttons */
+button, .btn {
+    background: #2e8b57;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-button:hover {
-    background-color: darkgreen;
-=======
-    background:#f4f4f4;
-    color:#333;
-    line-height:1.6;
-}
-
-/* Header */
-header{
-    background:#2e8b57;
-    color:white;
-    text-align:center;
-    padding:20px;
-}
-
-header h1{
-    margin-bottom:10px;
-}
-
-/* Navigation */
-nav{
-    background:#1f5f3f;
-    text-align:center;
-    padding:12px;
-}
-
-nav a{
-    color:white;
-    text-decoration:none;
-    margin:0 15px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:yellow;
-}
-
-/* Hero Section */
-.hero{
-    text-align:center;
-    padding:60px 20px;
-    background:white;
-}
-
-.hero h2{
-    color:#2e8b57;
-    margin-bottom:15px;
-}
-
-/* Sections */
-section{
-    padding:40px 20px;
-    text-align:center;
-}
-
-section h2{
-    color:#2e8b57;
-    margin-bottom:15px;
-}
-
-/* Service Cards */
-.card{
-    background:white;
-    width:300px;
-    margin:15px auto;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-/* Buttons */
-.btn{
-    display:inline-block;
-    background:#2e8b57;
-    color:white;
-    padding:10px 20px;
-    text-decoration:none;
-    border-radius:5px;
-}
-
-.btn:hover{
-    background:#246b45;
-}
-
-/* Contact */
-.contact{
-    background:white;
-    max-width:600px;
-    margin:auto;
-    padding:20px;
-    border-radius:10px;
+button:hover, .btn:hover {
+    background: #246b45;
 }
 
 /* Footer */
-footer{
-    background:#1f5f3f;
-    color:white;
-    text-align:center;
-    padding:15px;
-    margin-top:20px;
->>>>>>> f84d11fd4fceeb8542281b63e11421f61120a932
+footer {
+    background: #1f5f3f;
+    color: white;
+    padding: 15px;
+    margin-top: 20px;
+}
+.card {
+    background: white;
+    padding: 20px;
+    margin: 10px;
+    display: inline-block;
+    width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
-table {
-    margin: auto;
-    border-collapse: collapse;
+.card h2 {
+    color: #2e8b57;
+    font-size: 30px;
 }
 
-th, td {
-    padding: 10px;
+.container {
+    margin-top: 20px;
 }
