@@ -5,9 +5,10 @@
     box-sizing: border-box;
 }
 
+/* Body */
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f9;
+    background: lavender;
     color: #333;
     line-height: 1.6;
     text-align: center;
@@ -39,24 +40,29 @@ nav a:hover {
 
 /* Container */
 .container {
-    background: white;
+    background: lavender;
+    color: black;
     width: 90%;
-    max-width: 600px;
+    max-width: 900px;
     margin: 30px auto;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 /* Forms */
-input, select, textarea {
-    width: 90%;
-    padding: 10px;
-    margin: 8px 0;
+input,
+select,
+textarea {
+    background-color: white;
+    color: black;
+    width: 30%;
+    padding: 8px;
+    margin: 5px 0;
 }
 
 /* Buttons */
-button, .btn {
+button,
+.btn {
     background: #2e8b57;
     color: white;
     padding: 10px 20px;
@@ -66,8 +72,10 @@ button, .btn {
     text-decoration: none;
 }
 
-button:hover, .btn:hover {
+button:hover,
+.btn:hover {
     background: #246b45;
+    color: darkkhaki;
 }
 
 /* Footer */
@@ -77,14 +85,17 @@ footer {
     padding: 15px;
     margin-top: 20px;
 }
+
+/* Cards */
 .card {
-    background: white;
+    background:lightgoldenrodyellow;
+    color: black;
     padding: 20px;
     margin: 10px;
     display: inline-block;
-    width: 180px;
+    width: 200px;
     border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 5px rgba(0,0,0,0.1);
 }
 
 .card h2 {
@@ -92,6 +103,19 @@ footer {
     font-size: 30px;
 }
 
-.container {
-    margin-top: 20px;
+/* Social Icons */
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 28px;
+    color: white;
+}
+
+.social-icons a:hover {
+    opacity: 0.8;
+    font-size: 32px;
 }
