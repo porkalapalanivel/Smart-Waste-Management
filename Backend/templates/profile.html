@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>👤 User Profile</h1>
+</header>
+
+<main>
+
+    <p><strong>Name:</strong> User</p>
+    <p><strong>Email:</strong> user@gmail.com</p>
+    <p><strong>Role:</strong> Citizen</p>
+
+    <br>
+
+    <a href="{{ url_for('dashboard') }}">
+        <button type="button">⬅️ Back to Dashboard</button>
+    </a>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 Waste Management System</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

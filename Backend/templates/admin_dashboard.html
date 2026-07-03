@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        body{
+            font-family:Arial,sans-serif;
+            background:#f4f6f9;
+            margin:0;
+        }
+
+        nav{
+            background:#1f5f3f;
+            padding:15px;
+            text-align:center;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin:0 15px;
+            font-weight:bold;
+        }
+
+        nav a:hover{
+            color:yellow;
+        }
+
+        h1{
+            text-align:center;
+            margin-top:20px;
+        }
+
+        .container{
+            text-align:center;
+            margin-top:20px;
+        }
+
+        .card{
+            background:lightgoldenrodyellow;
+            color:black;
+            padding:20px;
+            margin:10px;
+            display:inline-block;
+            width:220px;
+            border-radius:10px;
+            box-shadow:0 5px 10px rgba(0,0,0,.2);
+        }
+
+        .card h2{
+            color:#2e8b57;
+            font-size:30px;
+        }
+
+        button{
+            background:#2e8b57;
+            color:white;
+            padding:10px 15px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            margin:5px;
+        }
+
+        button:hover{
+            background:#246b45;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+    <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('complaint') }}">Complaints</a>
+    <a href="{{ url_for('reports') }}">Reports</a>
+    <a href="{{ url_for('home') }}">Logout</a>
+</nav>
+
+<h1>👨‍💼 Admin Dashboard</h1>
+
+<div class="container">
+
+    <div class="card">
+        <h2>{{ total }}</h2>
+        <p>Total Complaints</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ pending }}</h2>
+        <p>Pending Complaints</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ resolved }}</h2>
+        <p>Resolved Complaints</p>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <h3>Actions</h3>
+
+    <a href="{{ url_for('complaint') }}">
+        <button type="button">View Complaints</button>
+    </a>
+
+    <a href="{{ url_for('reports') }}">
+        <button type="button">Generate Reports</button>
+    </a>
+
+</div>
+
+<div class="container">
+
+<h3>Recent Complaints</h3>
+
+<table border="1" cellpadding="10">
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Location</th>
+<th>Waste Type</th>
+<th>Description</th>
+<th>Status</th>
+<th>Image</th>
+<th>Action</th>
+
+</tr>
+
+{% for complaint in complaints %}
+
+<tr>
+
+<td>{{ complaint[0] }}</td>
+
+<td>{{ complaint[1] }}</td>
+
+<td>{{ complaint[2] }}</td>
+
+<td>{{ complaint[3] }}</td>
+
+<td>{{ complaint[4] }}</td>
+
+<td>{{ complaint[5] }}</td>
+
+<td>{{ complaint[6] }}</td>
+<td>
+    <img src="{{ url_for('static', filename='uploads/' + complaint[7]) }}"
+         width="100" height="100">
+</td>
+<td>
+
+    {% if complaint[6] == "Pending" %}
+        <a href="{{ url_for('update_status', id=complaint[0]) }}">
+            <button>Resolve</button>
+        </a>
+    {% else %}
+        <span style="color:green;">Resolved</span>
+    {% endif %}
+
+    <br><br>
+
+    <a href="{{ url_for('delete_complaint', id=complaint[0]) }}"
+       onclick="return confirm('Are you sure you want to delete this complaint?')">
+
+        <button style="background:red;color:white;">
+            Delete
+        </button>
+
+    </a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+
+
+</body>
+</html>
+
+
+
+       
