@@ -2,35 +2,49 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from werkzeug.utils import secure_filename
 import os
+
 app = Flask(__name__)
+
+# ---------------- CONFIG ----------------
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.secret_key = "waste123"
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="waste_management"
-)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-cursor = db.cursor()
+# ---------------- DATABASE ----------------
+try:
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="waste_management",
+        port=3306
+    )
 
+    cursor = db.cursor()
+    print("✅ Database Connected Successfully")
+
+except mysql.connector.Error as err:
+    print("❌ Database Error:", err)
+    exit()
+
+# ---------------- HOME ----------------
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
+# ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+
         email = request.form["email"]
         password = request.form["password"]
 
         sql = "SELECT * FROM users WHERE email=%s AND password=%s"
-        values = (email, password)
-
-        cursor.execute(sql, values)
+        cursor.execute(sql, (email, password))
         user = cursor.fetchone()
 
         if user:
@@ -41,8 +55,11 @@ def login():
 
     return render_template("login.html")
 
+
+# ---------------- REGISTER ----------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
     if request.method == "POST":
 
         fullname = request.form["name"]
@@ -50,18 +67,29 @@ def register():
         phone = request.form["phone"]
         password = request.form["password"]
 
-        sql = "INSERT INTO users (fullname, email, phone, password) VALUES (%s, %s, %s, %s)"
-        values = (fullname, email, phone, password)
+        # Email already irukka nu check
+        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        existing = cursor.fetchone()
 
-        cursor.execute(sql, values)
+        if existing:
+            return "Email already registered. Please login."
+
+        sql = """
+        INSERT INTO users(fullname,email,phone,password)
+        VALUES(%s,%s,%s,%s)
+        """
+
+        cursor.execute(sql, (fullname, email, phone, password))
         db.commit()
 
         return redirect(url_for("login"))
 
     return render_template("register.html")
 
+# ---------------- COMPLAINT ----------------
 @app.route("/complaint", methods=["GET", "POST"])
 def complaint():
+
     if request.method == "POST":
 
         name = request.form["name"]
@@ -70,19 +98,29 @@ def complaint():
         waste_type = request.form["type"]
         description = request.form["description"]
 
-        # IMAGE UPLOAD PART
         image = request.files["image"]
 
         filename = secure_filename(image.filename)
-        image.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+        image.save(
+            os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        )
 
         sql = """
         INSERT INTO complaints
-        (name, email, location, waste_type, description, status, image)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        (name,email,location,waste_type,description,status,image)
+        VALUES(%s,%s,%s,%s,%s,%s,%s)
         """
 
-        values = (name, email, location, waste_type, description, "Pending", filename)
+        values = (
+            name,
+            email,
+            location,
+            waste_type,
+            description,
+            "Pending",
+            filename
+        )
 
         cursor.execute(sql, values)
         db.commit()
@@ -90,39 +128,47 @@ def complaint():
         return redirect(url_for("success"))
 
     return render_template("complaint.html")
-
-
+# ---------------- SUCCESS ----------------
 @app.route("/success")
 def success():
     return render_template("success.html")
 
 
+# ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")
 
 
+# ---------------- PROFILE ----------------
 @app.route("/profile")
 def profile():
     return render_template("profile.html")
 
 
+# ---------------- REPORTS ----------------
 @app.route("/reports")
 def reports():
     return render_template("reports.html")
 
 
+# ---------------- CONTACT ----------------
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
 
 
+# ---------------- ADMIN LOGIN ----------------
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+
     if request.method == "POST":
+
         username = request.form["username"]
         password = request.form["password"]
-
+        
+        print("Username:", username)
+        print("Password:", password)
         if username == "admin" and password == "1234":
             return redirect(url_for("admin_dashboard"))
         else:
@@ -130,22 +176,20 @@ def admin():
 
     return render_template("admin_login.html")
 
+
+# ---------------- ADMIN DASHBOARD ----------------
 @app.route("/admin/dashboard")
 def admin_dashboard():
 
-    # All complaints
     cursor.execute("SELECT * FROM complaints")
     complaints = cursor.fetchall()
 
-    # Total complaints
     cursor.execute("SELECT COUNT(*) FROM complaints")
     total = cursor.fetchone()[0]
 
-    # Pending complaints
     cursor.execute("SELECT COUNT(*) FROM complaints WHERE status='Pending'")
     pending = cursor.fetchone()[0]
 
-    # Resolved complaints
     cursor.execute("SELECT COUNT(*) FROM complaints WHERE status='Resolved'")
     resolved = cursor.fetchone()[0]
 
@@ -157,28 +201,41 @@ def admin_dashboard():
         resolved=resolved
     )
 
+
+# ---------------- UPDATE STATUS ----------------
 @app.route("/update_status/<int:id>")
 def update_status(id):
 
-    sql = "UPDATE complaints SET status='Resolved' WHERE id=%s"
+    cursor.execute(
+        "UPDATE complaints SET status='Resolved' WHERE id=%s",
+        (id,)
+    )
 
-    cursor.execute(sql, (id,))
     db.commit()
 
     return redirect(url_for("admin_dashboard"))
+
+
+# ---------------- DELETE COMPLAINT ----------------
 @app.route("/delete_complaint/<int:id>")
 def delete_complaint(id):
 
-    sql = "DELETE FROM complaints WHERE id=%s"
+    cursor.execute(
+        "DELETE FROM complaints WHERE id=%s",
+        (id,)
+    )
 
-    cursor.execute(sql, (id,))
     db.commit()
 
     return redirect(url_for("admin_dashboard"))
+# ---------------- MY COMPLAINTS ----------------
 @app.route("/my_complaints")
 def my_complaints():
 
     email = session.get("email")
+
+    if not email:
+        return redirect(url_for("login"))
 
     cursor.execute(
         "SELECT * FROM complaints WHERE email=%s",
@@ -191,12 +248,22 @@ def my_complaints():
         "my_complaints.html",
         complaints=complaints
     )
+
+
+# ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
 
     session.clear()
 
     return redirect(url_for("login"))
+
+
+# ---------------- RUN APP ----------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
