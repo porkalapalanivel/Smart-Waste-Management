@@ -112,10 +112,15 @@ footer {
     text-decoration: none;
     margin: 0 10px;
     font-size: 28px;
-    color: white;
+    color: #ffffff;   /* White */
+}
+
+.social-icons a:visited {
+    color: #ffffff;   /* Stay white after click */
 }
 
 .social-icons a:hover {
+    color: #ffffff;   /* Remain white on hover */
     opacity: 0.8;
     font-size: 32px;
 }

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import mysql.connector
+import sqlite3
 from werkzeug.utils import secure_filename
 import os
 
@@ -13,21 +13,40 @@ app.secret_key = "waste123"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---------------- DATABASE ----------------
-try:
-    db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="waste_management",
-        port=3306
-    )
+def get_db():
+    conn = sqlite3.connect("waste_management.db", check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-    cursor = db.cursor()
-    print("✅ Database Connected Successfully")
+db = get_db()
+cursor = db.cursor()
 
-except mysql.connector.Error as err:
-    print("❌ Database Error:", err)
-    exit()
+# Tables illaina create pannum (first run la mattum)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullname TEXT,
+    email TEXT UNIQUE,
+    phone TEXT,
+    password TEXT
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS complaints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    location TEXT,
+    waste_type TEXT,
+    description TEXT,
+    status TEXT,
+    image TEXT
+)
+""")
+db.commit()
+
+print("✅ Database Connected Successfully")
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -43,7 +62,7 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
-        sql = "SELECT * FROM users WHERE email=%s AND password=%s"
+        sql = "SELECT * FROM users WHERE email=? AND password=?"
         cursor.execute(sql, (email, password))
         user = cursor.fetchone()
 
@@ -67,8 +86,7 @@ def register():
         phone = request.form["phone"]
         password = request.form["password"]
 
-        # Email already irukka nu check
-        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        cursor.execute("SELECT * FROM users WHERE email=?", (email,))
         existing = cursor.fetchone()
 
         if existing:
@@ -76,7 +94,7 @@ def register():
 
         sql = """
         INSERT INTO users(fullname,email,phone,password)
-        VALUES(%s,%s,%s,%s)
+        VALUES(?,?,?,?)
         """
 
         cursor.execute(sql, (fullname, email, phone, password))
@@ -109,7 +127,7 @@ def complaint():
         sql = """
         INSERT INTO complaints
         (name,email,location,waste_type,description,status,image)
-        VALUES(%s,%s,%s,%s,%s,%s,%s)
+        VALUES(?,?,?,?,?,?,?)
         """
 
         values = (
@@ -128,6 +146,7 @@ def complaint():
         return redirect(url_for("success"))
 
     return render_template("complaint.html")
+
 # ---------------- SUCCESS ----------------
 @app.route("/success")
 def success():
@@ -166,9 +185,7 @@ def admin():
 
         username = request.form["username"]
         password = request.form["password"]
-        
-        print("Username:", username)
-        print("Password:", password)
+
         if username == "admin" and password == "1234":
             return redirect(url_for("admin_dashboard"))
         else:
@@ -207,7 +224,7 @@ def admin_dashboard():
 def update_status(id):
 
     cursor.execute(
-        "UPDATE complaints SET status='Resolved' WHERE id=%s",
+        "UPDATE complaints SET status='Resolved' WHERE id=?",
         (id,)
     )
 
@@ -221,13 +238,14 @@ def update_status(id):
 def delete_complaint(id):
 
     cursor.execute(
-        "DELETE FROM complaints WHERE id=%s",
+        "DELETE FROM complaints WHERE id=?",
         (id,)
     )
 
     db.commit()
 
     return redirect(url_for("admin_dashboard"))
+
 # ---------------- MY COMPLAINTS ----------------
 @app.route("/my_complaints")
 def my_complaints():
@@ -238,7 +256,7 @@ def my_complaints():
         return redirect(url_for("login"))
 
     cursor.execute(
-        "SELECT * FROM complaints WHERE email=%s",
+        "SELECT * FROM complaints WHERE email=?",
         (email,)
     )
 
