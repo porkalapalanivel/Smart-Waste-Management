@@ -14,9 +14,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---------------- DATABASE ----------------
 def get_db():
-    conn = sqlite3.connect("waste_management.db", check_same_thread=False)
+    import os
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DB_PATH = os.path.join(BASE_DIR, "waste_management.db")
+
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
-    return conn
+    return conn 
 
 db = get_db()
 cursor = db.cursor()
@@ -116,13 +121,17 @@ def complaint():
         waste_type = request.form["type"]
         description = request.form["description"]
 
-        image = request.files["image"]
+        # 👇 Replace from here
+        image = request.files.get("image")
 
-        filename = secure_filename(image.filename)
+        filename = ""
 
-        image.save(
-            os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        )
+        if image and image.filename:
+            filename = secure_filename(image.filename)
+            image.save(
+                os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            )
+        # 👆 Replace till here
 
         sql = """
         INSERT INTO complaints
@@ -139,9 +148,10 @@ def complaint():
             "Pending",
             filename
         )
-
+        print("VALUES =", values)
         cursor.execute(sql, values)
         db.commit()
+        print("COMPLAINT SAVED")
 
         return redirect(url_for("success"))
 
