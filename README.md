@@ -28,7 +28,7 @@ Manual waste monitoring leads to delayed waste collection, poor complaint tracki
 - Flask
 
 ### Database
-- MySQL
+- SQLite
 
 ## Modules
 
@@ -42,7 +42,6 @@ Manual waste monitoring leads to delayed waste collection, poor complaint tracki
 ## Project Structure
 
 Real-Life-Solution-for-Waste-Management/
-├── Frontend/
 ├── Backend/
 ├── Database/
 ├── Documentation/
